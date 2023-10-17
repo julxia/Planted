@@ -1,12 +1,13 @@
+import { BodyT, fetchy } from "@/utils/fetchy";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-
-import { BodyT, fetchy } from "@/utils/fetchy";
 
 export const useUserStore = defineStore(
   "user",
   () => {
     const currentUsername = ref("");
+    const currentDisplayName = ref("");
+    const currentPhoto = ref("");
 
     const isLoggedIn = computed(() => currentUsername.value !== "");
 
@@ -14,9 +15,9 @@ export const useUserStore = defineStore(
       currentUsername.value = "";
     };
 
-    const createUser = async (username: string, password: string) => {
+    const createUser = async (username: string, password: string, displayName: string, photo: string, latitude: string, longitude: string) => {
       await fetchy("/api/users", "POST", {
-        body: { username, password },
+        body: { username, password, displayName, photo, latitude, longitude },
       });
     };
 
@@ -29,9 +30,14 @@ export const useUserStore = defineStore(
     const updateSession = async () => {
       try {
         const { username } = await fetchy("/api/session", "GET", { alert: false });
+        const { displayName, photo } = await fetchy(`/api/profiles/${username}`, "GET", {});
         currentUsername.value = username;
+        currentDisplayName.value = displayName;
+        currentPhoto.value = photo;
       } catch {
         currentUsername.value = "";
+        currentDisplayName.value = "";
+        currentPhoto.value = "";
       }
     };
 
@@ -44,6 +50,10 @@ export const useUserStore = defineStore(
       await fetchy("/api/users", "PATCH", { body: { update: patch } });
     };
 
+    const updateProfile = async (patch: BodyT) => {
+      await fetchy("/api/profiles", "PATCH", { body: { update: patch } });
+    };
+
     const deleteUser = async () => {
       await fetchy("/api/users", "DELETE");
       resetStore();
@@ -51,12 +61,15 @@ export const useUserStore = defineStore(
 
     return {
       currentUsername,
+      currentDisplayName,
+      currentPhoto,
       isLoggedIn,
       createUser,
       loginUser,
       updateSession,
       logoutUser,
       updateUser,
+      updateProfile,
       deleteUser,
     };
   },

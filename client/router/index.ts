@@ -5,6 +5,7 @@ import { useUserStore } from "@/stores/user";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import ProfilesView from "../views/ProfilesView.vue";
 import SettingView from "../views/SettingView.vue";
 
 const router = createRouter({
@@ -14,6 +15,11 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: HomeView,
+    },
+    {
+      path: "/profiles",
+      name: "Profiles",
+      component: ProfilesView,
     },
     {
       path: "/setting",

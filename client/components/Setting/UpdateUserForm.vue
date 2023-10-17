@@ -5,7 +5,10 @@ import { ref } from "vue";
 let username = ref("");
 let password = ref("");
 
-const { updateUser, updateSession } = useUserStore();
+let displayName = ref("");
+let photo = ref("");
+
+const { updateUser, updateSession, updateProfile } = useUserStore();
 
 async function updateUsername() {
   await updateUser({ username: username.value });
@@ -17,6 +20,16 @@ async function updatePassword() {
   await updateUser({ password: password.value });
   await updateSession();
   password.value = "";
+}
+
+async function updateDisplayName() {
+  await updateProfile({ displayName: displayName.value });
+  await updateSession();
+}
+
+async function updateProfilePhoto() {
+  await updateProfile({ photo: photo.value });
+  await updateSession();
 }
 </script>
 
@@ -35,6 +48,22 @@ async function updatePassword() {
       <legend>Change your password</legend>
       <input type="password" placeholder="New password" v-model="password" required />
       <button type="submit" class="pure-button pure-button-primary">Update password</button>
+    </fieldset>
+  </form>
+
+  <form @submit.prevent="updateDisplayName" class="pure-form">
+    <fieldset>
+      <legend>Change your display name</legend>
+      <input type="text" placeholder="New display name" v-model="displayName" required />
+      <button type="submit" class="pure-button pure-button-primary">Update display name</button>
+    </fieldset>
+  </form>
+
+  <form @submit.prevent="updateProfilePhoto" class="pure-form">
+    <fieldset>
+      <legend>Change your profile photo</legend>
+      <input type="text" placeholder="New display photo" v-model="photo" required />
+      <button type="submit" class="pure-button pure-button-primary">Update display photo</button>
     </fieldset>
   </form>
 </template>
