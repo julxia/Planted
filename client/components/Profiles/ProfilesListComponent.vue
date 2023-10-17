@@ -26,7 +26,6 @@ onBeforeMount(async () => {
 <template>
   <section class="profiles" v-if="loaded && profiles.length !== 0">
     <article v-for="profile in profiles" :key="profile._id">
-      <p>{{ profile.username }}</p>
       <p>{{ profile.displayName }}</p>
       <div style="text-align: center">
         <img id="profile" :src="profile.photo" alt="ProfilePhoto" width="200" />
